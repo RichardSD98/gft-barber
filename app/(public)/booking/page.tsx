@@ -433,7 +433,7 @@ function BookingPageContent() {
                             onClick={() => selectDate(date)}
                             disabled={isUnavailable}
                             className={[
-                              'h-9 rounded-btn border text-xs font-semibold transition-colors md:h-10 md:text-sm',
+                              'mx-auto h-9 w-9 rounded-full border text-xs font-semibold transition-colors md:h-10 md:w-10 md:text-sm',
                               isSelected
                                 ? 'border-brand-blue bg-brand-blue text-white'
                                 : isSameMonth(date, calendarMonth)
