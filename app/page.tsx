@@ -342,7 +342,7 @@ export default function HomePage() {
       <section className="px-4 py-10 md:px-8 md:py-14">
         <div className="mx-auto grid w-full max-w-7xl gap-4 md:grid-cols-3">
           <Card className="bg-white/85 backdrop-blur-sm">
-            <CardContent className="flex items-center gap-4 pt-6">
+            <CardContent className="flex flex-col items-center gap-4 pt-6 text-center sm:flex-row sm:justify-start sm:text-left">
               <div className="rounded-2xl bg-brand-blue/10 p-3 text-brand-blue">
                 <Phone className="h-5 w-5" />
               </div>
@@ -356,7 +356,7 @@ export default function HomePage() {
           </Card>
 
           <Card className="bg-white/85 backdrop-blur-sm">
-            <CardContent className="flex items-center gap-4 pt-6">
+            <CardContent className="flex flex-col items-center gap-4 pt-6 text-center sm:flex-row sm:justify-start sm:text-left">
               <div className="rounded-2xl bg-brand-blue/10 p-3 text-brand-blue">
                 <Mail className="h-5 w-5" />
               </div>
@@ -370,7 +370,7 @@ export default function HomePage() {
           </Card>
 
           <Card className="bg-white/85 backdrop-blur-sm">
-            <CardContent className="flex items-center gap-4 pt-6">
+            <CardContent className="flex flex-col items-center gap-4 pt-6 text-center sm:flex-row sm:justify-start sm:text-left">
               <div className="rounded-2xl bg-brand-blue/10 p-3 text-brand-blue">
                 <MapPin className="h-5 w-5" />
               </div>
@@ -378,7 +378,7 @@ export default function HomePage() {
                 href="https://www.google.com/maps/search/Begonia+Street+Khomasdal+Windhoek"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="transition-opacity hover:opacity-85"
+                className="text-center transition-opacity hover:opacity-85 sm:text-left"
               >
                 <p className="text-xs uppercase tracking-[0.22em] text-slate-400">Location</p>
                 <p className="mt-1 text-lg font-semibold text-brand-navy hover:text-brand-blue">Begonia Street, Khomasdal</p>
