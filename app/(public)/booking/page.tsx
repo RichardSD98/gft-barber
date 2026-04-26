@@ -249,6 +249,49 @@ function BookingPageContent() {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
+  const maybeAdvanceFromDetails = async () => {
+    if (currentStep !== 3) {
+      return;
+    }
+
+    const isValid = await trigger(['fullName', 'phone', 'email']);
+    if (isValid) {
+      setCurrentStep(4);
+    }
+  };
+
+  const serviceRegister = register('service', {
+    onChange: () => {
+      setCurrentStep(2);
+    },
+  });
+
+  const timeRegister = register('time', {
+    onChange: () => {
+      if (currentStep === 2) {
+        setCurrentStep(3);
+      }
+    },
+  });
+
+  const fullNameRegister = register('fullName', {
+    onBlur: () => {
+      void maybeAdvanceFromDetails();
+    },
+  });
+
+  const phoneRegister = register('phone', {
+    onBlur: () => {
+      void maybeAdvanceFromDetails();
+    },
+  });
+
+  const emailRegister = register('email', {
+    onBlur: () => {
+      void maybeAdvanceFromDetails();
+    },
+  });
+
   const paymentLast4 = (cardNumber || '').replace(/\D/g, '').slice(-4) || '----';
 
   const selectDate = (date: Date) => {
@@ -284,14 +327,14 @@ function BookingPageContent() {
         </div>
         <div className="relative mx-auto flex max-w-6xl flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-brand-sky backdrop-blur">
+            <div className="mb-4 hidden items-center gap-2 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-brand-sky backdrop-blur md:inline-flex">
               <Sparkles className="h-4 w-4" />
               Booking flow refresh
             </div>
-            <h1 className="text-3xl md:text-5xl font-heading font-bold">Book Your Appointment</h1>
-            <p className="mt-2 text-brand-sky">GFT Barber | Professional Haircuts</p>
+            <h1 className="text-2xl md:text-5xl font-heading font-bold">Book Your Appointment</h1>
+            <p className="mt-2 text-sm uppercase tracking-[0.18em] text-brand-sky/90 md:text-base md:normal-case md:tracking-normal">GFT Barber | Professional Haircuts</p>
           </div>
-          <div className="max-w-sm rounded-card border border-white/10 bg-white/8 px-5 py-4 backdrop-blur">
+          <div className="hidden max-w-sm rounded-card border border-white/10 bg-white/8 px-5 py-4 backdrop-blur md:block">
             <p className="text-xs uppercase tracking-[0.24em] text-white/45">Process</p>
             <p className="mt-2 text-sm leading-6 text-white/75">Choose your service, pick a slot, confirm your details, and review policy in one clean flow.</p>
           </div>
@@ -328,7 +371,7 @@ function BookingPageContent() {
 
           <ProgressBar currentStep={currentStep} totalSteps={5} />
 
-          <Card className="border-brand-border/70 bg-white/90 shadow-[0_30px_90px_-55px_rgba(17,20,30,0.45)] backdrop-blur-sm">
+          <Card className="rounded-[30px] border-brand-border/70 bg-white/95 shadow-[0_24px_70px_-50px_rgba(17,20,30,0.38)] backdrop-blur-sm">
             <CardContent className="pt-8 md:pt-10">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
             <AnimatePresence mode="wait">
@@ -356,7 +399,7 @@ function BookingPageContent() {
                         <input
                           type="radio"
                           value={service.id}
-                          {...register('service')}
+                          {...serviceRegister}
                           className="absolute right-4 top-4 h-4 w-4 cursor-pointer text-brand-blue"
                         />
                         <div className="pr-8">
@@ -481,7 +524,7 @@ function BookingPageContent() {
                               type="radio"
                               value={slot.id}
                               disabled={!slot.available}
-                              {...register('time')}
+                              {...timeRegister}
                               className="hidden"
                             />
                             <div className="text-center">
@@ -527,7 +570,7 @@ function BookingPageContent() {
                         id="fullName"
                         type="text"
                         placeholder="John Doe"
-                        {...register('fullName')}
+                        {...fullNameRegister}
                         className={fieldClassName}
                       />
                       {errors.fullName && (
@@ -544,7 +587,7 @@ function BookingPageContent() {
                         id="phone"
                         type="tel"
                         placeholder="+264852449888"
-                        {...register('phone')}
+                        {...phoneRegister}
                         className={fieldClassName}
                       />
                       {errors.phone && (
@@ -561,7 +604,7 @@ function BookingPageContent() {
                         id="email"
                         type="email"
                         placeholder="you@example.com"
-                        {...register('email')}
+                        {...emailRegister}
                         className={fieldClassName}
                       />
                       {errors.email && (
@@ -819,13 +862,13 @@ function BookingPageContent() {
 
             {/* Navigation Buttons */}
             {currentStep < 5 && (
-              <div className="mt-12 flex justify-between gap-4">
+              <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:justify-between sm:gap-4">
                 <Button
                   type="button"
                   onClick={prevStep}
                   disabled={currentStep === 1}
                   variant="ghost"
-                  className="bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  className="w-full bg-slate-100 text-slate-700 hover:bg-slate-200 sm:w-auto"
                 >
                   <ChevronLeft size={20} />
                   Back
@@ -835,6 +878,7 @@ function BookingPageContent() {
                   <Button
                     type="submit"
                     loading={submitting}
+                    className="w-full sm:w-auto"
                   >
                     {submitting ? 'Booking...' : 'Confirm Booking'}
                     <Check size={20} />
@@ -843,6 +887,7 @@ function BookingPageContent() {
                   <Button
                     type="button"
                     onClick={nextStep}
+                    className="w-full sm:w-auto"
                   >
                     Continue
                     <ChevronRight size={20} />
