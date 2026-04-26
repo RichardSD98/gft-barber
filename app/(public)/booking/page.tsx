@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -101,7 +101,7 @@ const optionCardClassName =
 const calendarWeekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const bookingSteps = ['Service', 'Date & Time', 'Your Details', 'Review & Payment', 'Confirmation'];
 
-export default function BookingPage() {
+function BookingPageContent() {
   const logoUrl =
     'https://scontent.fers3-1.fna.fbcdn.net/v/t39.30808-6/633059639_904722098953753_8304485353082645586_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=ZAcBDH19segQ7kNvwGYfk4h&_nc_oc=Adqn9YSzH5fEqalQx9E4uRFbV1DjAU4aECcjQiQ_z-3DdzLBIBt82OCA3WcdvGt3gps&_nc_zt=23&_nc_ht=scontent.fers3-1.fna&_nc_gid=aS1kc1pzWQE4qz1HNaNpMA&_nc_ss=7b289&oh=00_Af0bxSYJIHEVU1NqzyE6g3eVeiCf5FL8Gxy0RbHsNOxslw&oe=69F316B4';
 
@@ -861,5 +861,22 @@ export default function BookingPage() {
         onClose={() => setIsPolicyModalOpen(false)}
       />
     </div>
+  );
+}
+
+export default function BookingPage() {
+  return (
+    <Suspense
+      fallback={
+        <section className="min-h-screen bg-[linear-gradient(180deg,#f8fbfd_0%,#ffffff_38%,#eef5fa_100%)] px-4 py-24 md:px-8">
+          <div className="mx-auto w-full max-w-4xl rounded-3xl border border-slate-200 bg-white p-8 shadow-sm md:p-10">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-brand-blue">Loading booking</p>
+            <h1 className="mt-3 font-heading text-3xl font-bold text-brand-navy md:text-4xl">Preparing your booking experience...</h1>
+          </div>
+        </section>
+      }
+    >
+      <BookingPageContent />
+    </Suspense>
   );
 }
