@@ -412,13 +412,13 @@ function BookingPageContent() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-7 gap-2 text-center text-[10px] font-semibold uppercase tracking-wide text-slate-500 md:gap-2 md:text-xs">
+                    <div className="grid grid-cols-7 gap-2.5 text-center text-[10px] font-semibold uppercase tracking-wide text-slate-500 md:gap-2 md:text-xs">
                       {calendarWeekDays.map((day) => (
                         <p key={day} className="py-0.5 md:py-1">{day}</p>
                       ))}
                     </div>
 
-                    <div className="mt-1 grid grid-cols-7 gap-2 md:gap-2">
+                    <div className="mt-1 grid grid-cols-7 gap-2.5 md:gap-2">
                       {calendarGridDates.map((date) => {
                         const isUnavailable =
                           isSunday(date) || isBefore(date, bookingStartDate) || isAfter(date, bookingEndDate);
