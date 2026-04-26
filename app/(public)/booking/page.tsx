@@ -44,12 +44,12 @@ const bookingSchema = z.object({
   date: z.string().min(1, 'Please select a date'),
   time: z.string().min(1, 'Please select a time slot'),
   fullName: z.string().min(2, 'Name must be at least 2 characters'),
-  phone: z.string().regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number'),
+  phone: z.string().min(1, 'Phone number is required').regex(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number'),
   email: z.string().email('Invalid email address'),
   cardHolder: z.string().min(2, 'Card holder name is required'),
-  cardNumber: z.string().regex(/^(\d{4}\s?){4}$/, 'Enter a valid 16-digit card number'),
-  expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/[0-9]{2}$/, 'Use MM/YY format'),
-  cvv: z.string().regex(/^\d{3,4}$/, 'Enter a valid CVV'),
+  cardNumber: z.string().min(1, 'Card number is required').regex(/^(\d{4}\s?){4}$/, 'Enter a valid 16-digit card number'),
+  expiryDate: z.string().min(1, 'Expiry date is required').regex(/^(0[1-9]|1[0-2])\/[0-9]{2}$/, 'Use MM/YY format'),
+  cvv: z.string().min(1, 'CVV is required').regex(/^\d{3,4}$/, 'Enter a valid CVV'),
   policyAccepted: z.boolean().refine((val) => val === true, {
     message: 'You must accept the booking policy',
   }),
@@ -588,26 +588,26 @@ function BookingPageContent() {
                     <CardContent className="p-6 md:p-8">
                     <h3 className="font-heading font-bold text-brand-navy mb-4">Order Summary</h3>
                     <div className="space-y-3 text-sm md:text-base">
-                      <div className="flex justify-between">
+                      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                         <span className="text-brand-border">Service:</span>
-                        <span className="font-semibold text-brand-navy">{selectedServiceName}</span>
+                        <span className="font-semibold text-brand-navy sm:text-right">{selectedServiceName}</span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                         <span className="text-brand-border">Date:</span>
-                        <span className="font-semibold text-brand-navy">
+                        <span className="font-semibold text-brand-navy sm:text-right">
                           {selectedDate && format(new Date(selectedDate), 'EEEE, d MMMM yyyy')}
                         </span>
                       </div>
-                      <div className="flex justify-between">
+                      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                         <span className="text-brand-border">Time:</span>
-                        <span className="font-semibold text-brand-navy">
+                        <span className="font-semibold text-brand-navy sm:text-right">
                           {timeSlots.find((s) => s.id === selectedTime)?.time}
                         </span>
                       </div>
                       <div className="border-t border-brand-border pt-3">
-                        <div className="flex justify-between">
+                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                           <span className="text-brand-border">Name:</span>
-                          <span className="font-semibold text-brand-navy">{fullName}</span>
+                          <span className="font-semibold text-brand-navy sm:text-right">{fullName}</span>
                         </div>
                       </div>
                     </div>
@@ -649,7 +649,7 @@ function BookingPageContent() {
                         )}
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         <div>
                           <label htmlFor="expiryDate" className="mb-2 block text-sm font-semibold text-brand-navy">
                             Expiry (MM/YY) *

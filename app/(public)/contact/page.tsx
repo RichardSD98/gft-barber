@@ -240,7 +240,7 @@ export default function ContactPage() {
                           {item.day}
                         </td>
                         <td
-                          className={`px-6 py-4 text-right font-medium ${
+                          className={`whitespace-nowrap px-6 py-4 text-right font-medium ${
                             item.day === 'Sunday' ? 'text-slate-400' : 'text-brand-blue'
                           }`}
                         >
