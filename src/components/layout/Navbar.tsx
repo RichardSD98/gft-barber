@@ -46,13 +46,7 @@ function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuPathname, setMenuPathname] = useState<string | null>(null);
-  const [hasShadow, setHasShadow] = useState(() => {
-    if (typeof window === 'undefined') {
-      return false;
-    }
-
-    return window.scrollY > 50;
-  });
+  const [hasShadow, setHasShadow] = useState(false);
   const hideNavbar = pathname?.startsWith('/dashboard');
   const isMenuVisible = isMenuOpen && menuPathname === pathname;
 
@@ -60,6 +54,8 @@ function Navbar() {
     const handleScroll = () => {
       setHasShadow(window.scrollY > 50);
     };
+
+    handleScroll();
 
     window.addEventListener('scroll', handleScroll, { passive: true });
 
