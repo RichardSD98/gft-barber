@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -18,7 +18,6 @@ import {
   ChevronLeft,
   Calendar,
   Clock,
-  Check,
   AlertCircle,
   Sparkles,
 } from 'lucide-react';
@@ -136,8 +135,14 @@ function BookingPageContent() {
   const selectedDate = useWatch({ control, name: 'date' });
   const selectedTime = useWatch({ control, name: 'time' });
   const fullName = useWatch({ control, name: 'fullName' });
+  const phone = useWatch({ control, name: 'phone' });
   const email = useWatch({ control, name: 'email' });
+  const cardHolder = useWatch({ control, name: 'cardHolder' });
   const cardNumber = useWatch({ control, name: 'cardNumber' });
+  const expiryDate = useWatch({ control, name: 'expiryDate' });
+  const cvv = useWatch({ control, name: 'cvv' });
+  const policyAccepted = useWatch({ control, name: 'policyAccepted' });
+  const autoSubmitLockRef = useRef(false);
   const bookingStartDate = addDays(startOfToday(), 1);
   const bookingEndDate = addDays(startOfToday(), 30);
   const calendarGridDates = eachDayOfInterval({
@@ -188,7 +193,7 @@ function BookingPageContent() {
     }
   };
 
-  const onSubmit = async (data: BookingFormData) => {
+  const onSubmit = useCallback(async (data: BookingFormData) => {
     try {
       setSubmitting(true);
       const response = await fetch('/api/bookings', {
@@ -210,54 +215,10 @@ function BookingPageContent() {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  const nextStep = async () => {
-    // Validate current step before moving forward
-    if (currentStep === 1) {
-      if (!selectedService) {
-        toast.error('Please select a service');
-        return;
-      }
-    } else if (currentStep === 2) {
-      if (!selectedDate) {
-        toast.error('Please select a date');
-        return;
-      }
-      const selectedDateObj = new Date(`${selectedDate}T00:00:00`);
-      if (selectedDateObj.getDay() === 0) {
-        toast.error('We are closed on Sundays. Please pick another date.');
-        return;
-      }
-      if (!selectedTime) {
-        toast.error('Please select a time slot');
-        return;
-      }
-    } else if (currentStep === 3) {
-      // Validate customer details before payment step.
-      const isValid = await trigger(['fullName', 'phone', 'email']);
-      if (!isValid) return;
-    } else if (currentStep === 4) {
-      // Validate payment + policy before submission.
-      const isValid = await trigger(['cardHolder', 'cardNumber', 'expiryDate', 'cvv', 'policyAccepted']);
-      if (!isValid) return;
-    }
-    setCurrentStep((prev) => Math.min(prev + 1, 5));
-  };
+  }, []);
 
   const prevStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
-  };
-
-  const maybeAdvanceFromDetails = async () => {
-    if (currentStep !== 3) {
-      return;
-    }
-
-    const isValid = await trigger(['fullName', 'phone', 'email']);
-    if (isValid) {
-      setCurrentStep(4);
-    }
   };
 
   const serviceRegister = register('service', {
@@ -274,23 +235,79 @@ function BookingPageContent() {
     },
   });
 
-  const fullNameRegister = register('fullName', {
-    onBlur: () => {
-      void maybeAdvanceFromDetails();
-    },
-  });
+  useEffect(() => {
+    if (currentStep !== 3) {
+      return;
+    }
 
-  const phoneRegister = register('phone', {
-    onBlur: () => {
-      void maybeAdvanceFromDetails();
-    },
-  });
+    const hasAllDetails = Boolean(fullName?.trim() && phone?.trim() && email?.trim());
+    if (!hasAllDetails) {
+      return;
+    }
 
-  const emailRegister = register('email', {
-    onBlur: () => {
-      void maybeAdvanceFromDetails();
-    },
-  });
+    let cancelled = false;
+
+    const validateAndAdvance = async () => {
+      const isValid = await trigger(['fullName', 'phone', 'email']);
+      if (isValid && !cancelled) {
+        setCurrentStep(4);
+      }
+    };
+
+    void validateAndAdvance();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [currentStep, fullName, phone, email, trigger]);
+
+  useEffect(() => {
+    if (currentStep !== 4) {
+      autoSubmitLockRef.current = false;
+      return;
+    }
+
+    if (submitting || autoSubmitLockRef.current) {
+      return;
+    }
+
+    const hasAllPaymentFields = Boolean(
+      cardHolder?.trim() && cardNumber?.trim() && expiryDate?.trim() && cvv?.trim() && policyAccepted
+    );
+
+    if (!hasAllPaymentFields) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const validateAndSubmit = async () => {
+      const isValid = await trigger(['cardHolder', 'cardNumber', 'expiryDate', 'cvv', 'policyAccepted']);
+      if (!isValid || cancelled) {
+        return;
+      }
+
+      autoSubmitLockRef.current = true;
+      await handleSubmit(onSubmit)();
+    };
+
+    void validateAndSubmit();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    currentStep,
+    submitting,
+    cardHolder,
+    cardNumber,
+    expiryDate,
+    cvv,
+    policyAccepted,
+    trigger,
+    handleSubmit,
+    onSubmit,
+  ]);
 
   const paymentLast4 = (cardNumber || '').replace(/\D/g, '').slice(-4) || '----';
 
@@ -343,6 +360,18 @@ function BookingPageContent() {
 
       <section className="w-full px-4 py-12 md:px-8 md:py-16">
         <div className="mx-auto max-w-4xl">
+          {currentStep > 1 && currentStep < 5 ? (
+            <button
+              type="button"
+              onClick={prevStep}
+              className="mb-4 inline-flex items-center gap-1 text-sm font-semibold text-slate-600 transition-colors hover:text-brand-blue"
+              aria-label="Go back"
+            >
+              <ChevronLeft size={18} />
+              Back
+            </button>
+          ) : null}
+
           <div className="mb-5 hidden grid-cols-2 gap-2 md:grid md:grid-cols-5 md:gap-3">
             {bookingSteps.map((label, idx) => {
               const stepNumber = idx + 1;
@@ -570,7 +599,7 @@ function BookingPageContent() {
                         id="fullName"
                         type="text"
                         placeholder="John Doe"
-                        {...fullNameRegister}
+                        {...register('fullName')}
                         className={fieldClassName}
                       />
                       {errors.fullName && (
@@ -587,7 +616,7 @@ function BookingPageContent() {
                         id="phone"
                         type="tel"
                         placeholder="+264852449888"
-                        {...phoneRegister}
+                        {...register('phone')}
                         className={fieldClassName}
                       />
                       {errors.phone && (
@@ -604,7 +633,7 @@ function BookingPageContent() {
                         id="email"
                         type="email"
                         placeholder="you@example.com"
-                        {...emailRegister}
+                        {...register('email')}
                         className={fieldClassName}
                       />
                       {errors.email && (
@@ -778,6 +807,10 @@ function BookingPageContent() {
                   {errors.policyAccepted && (
                     <p className="text-red-500 text-sm mt-3">{errors.policyAccepted.message}</p>
                   )}
+
+                  <p className="mt-3 text-sm text-slate-500">
+                    Once payment details and policy acceptance are complete, booking confirms automatically.
+                  </p>
                 </motion.div>
               )}
 
@@ -862,37 +895,10 @@ function BookingPageContent() {
 
             {/* Navigation Buttons */}
             {currentStep < 5 && (
-              <div className="mt-12 flex flex-col gap-3 sm:flex-row sm:justify-between sm:gap-4">
-                <Button
-                  type="button"
-                  onClick={prevStep}
-                  disabled={currentStep === 1}
-                  variant="ghost"
-                  className="w-full bg-slate-100 text-slate-700 hover:bg-slate-200 sm:w-auto"
-                >
-                  <ChevronLeft size={20} />
-                  Back
-                </Button>
-
-                {currentStep === 4 ? (
-                  <Button
-                    type="submit"
-                    loading={submitting}
-                    className="w-full sm:w-auto"
-                  >
-                    {submitting ? 'Booking...' : 'Confirm Booking'}
-                    <Check size={20} />
-                  </Button>
-                ) : (
-                  <Button
-                    type="button"
-                    onClick={nextStep}
-                    className="w-full sm:w-auto"
-                  >
-                    Continue
-                    <ChevronRight size={20} />
-                  </Button>
-                )}
+              <div className="mt-12 flex items-center justify-end gap-3 sm:gap-4">
+                {currentStep === 4 && submitting ? (
+                  <p className="text-sm font-medium text-brand-blue">Confirming booking...</p>
+                ) : null}
               </div>
             )}
           </form>
