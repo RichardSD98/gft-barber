@@ -656,9 +656,8 @@ function BookingPageContent() {
                   <StepHeader step={4} title="Review & Payment" />
 
                   {/* Booking Summary */}
-                  <Card className="mb-6 border-brand-border/70 bg-slate-50/80">
-                    <CardContent className="p-6 md:p-8">
-                    <h3 className="font-heading font-bold text-brand-navy mb-4">Order Summary</h3>
+                  <section className="mb-6 rounded-card border border-brand-border/70 bg-slate-50/80 p-6 md:p-8">
+                    <h3 className="mb-4 font-heading font-bold text-brand-navy">Order Summary</h3>
                     <div className="space-y-3 text-sm md:text-base">
                       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                         <span className="text-brand-border">Service:</span>
@@ -683,11 +682,9 @@ function BookingPageContent() {
                         </div>
                       </div>
                     </div>
-                    </CardContent>
-                  </Card>
+                  </section>
 
-                  <Card className="mb-6 border-brand-border/70 bg-white/90">
-                    <CardContent className="space-y-5 p-6 md:p-8">
+                  <section className="mb-6 space-y-5 rounded-card border border-brand-border/70 bg-white/90 p-6 md:p-8">
                       <div>
                         <label htmlFor="cardHolder" className="mb-2 block text-sm font-semibold text-brand-navy">
                           Card Holder Name *
@@ -755,8 +752,7 @@ function BookingPageContent() {
                           )}
                         </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                  </section>
 
                   <div className="mb-6 rounded-card border border-brand-blue/20 bg-brand-blue/5 p-4 md:p-6">
                     <div className="flex gap-3 mb-4">
@@ -844,8 +840,7 @@ function BookingPageContent() {
                     Your appointment has been successfully booked.
                   </p>
 
-                  <Card className="mb-8 border-brand-blue/30 bg-white text-left shadow-[0_24px_70px_-45px_rgba(13,102,180,0.8)]">
-                    <CardContent className="p-6 md:p-8">
+                  <div className="mb-8 rounded-card border border-brand-blue/30 bg-white p-6 text-left shadow-[0_24px_70px_-45px_rgba(13,102,180,0.8)] md:p-8">
                     <p className="text-sm text-brand-border mb-2">Reference Number</p>
                     <p className="text-2xl md:text-3xl font-bold text-brand-blue font-mono">
                       {bookingReference}
@@ -874,8 +869,7 @@ function BookingPageContent() {
                         </p>
                       </div>
                     </div>
-                    </CardContent>
-                  </Card>
+                  </div>
 
                   <p className="text-brand-border text-sm mb-6">
                     A confirmation email has been sent to <span className="font-semibold">{email}</span>
@@ -893,14 +887,11 @@ function BookingPageContent() {
               )}
             </AnimatePresence>
 
-            {/* Navigation Buttons */}
-            {currentStep < 5 && (
-              <div className="mt-12 flex items-center justify-end gap-3 sm:gap-4">
-                {currentStep === 4 && submitting ? (
-                  <p className="text-sm font-medium text-brand-blue">Confirming booking...</p>
-                ) : null}
+            {currentStep === 4 && submitting ? (
+              <div className="mt-12 flex items-center justify-end">
+                <p className="text-sm font-medium text-brand-blue">Confirming booking...</p>
               </div>
-            )}
+            ) : null}
           </form>
             </CardContent>
           </Card>
