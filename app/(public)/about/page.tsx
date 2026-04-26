@@ -164,7 +164,7 @@ export default function AboutPage() {
             <CardContent>
               <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-3">
                 <a
-                  href="https://www.google.com/maps/search/Begonia+Street+Khomasdal+Windhoek"
+                  href="https://maps.app.goo.gl/TPchSFyMhzo3oC2o6"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-center transition-opacity hover:opacity-85 md:text-left"

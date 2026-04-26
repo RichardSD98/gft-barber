@@ -375,7 +375,7 @@ export default function HomePage() {
                 <MapPin className="h-5 w-5" />
               </div>
               <a
-                href="https://www.google.com/maps/search/Begonia+Street+Khomasdal+Windhoek"
+                href="https://maps.app.goo.gl/TPchSFyMhzo3oC2o6"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-center transition-opacity hover:opacity-85 sm:text-left"

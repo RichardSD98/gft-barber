@@ -56,11 +56,8 @@ function FacebookIcon(props: React.ComponentProps<'svg'>) {
 }
 
 export default function ContactPage() {
-  const mapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
-  const mapsQuery = encodeURIComponent('Begonia Street, Khomasdal, Windhoek, Namibia');
-  const mapsEmbedSrc = mapsApiKey
-    ? `https://www.google.com/maps/embed/v1/place?key=${mapsApiKey}&q=${mapsQuery}`
-    : `https://www.google.com/maps?q=${mapsQuery}&output=embed`;
+  const mapsEmbedSrc =
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3684.8848736507366!2d17.0489753!3d-22.545985!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x1c0b1d76f8b44b37%3A0xdd2e86bb55f4c541!2sGFT%20Barber!5e0!3m2!1sen!2sna!4v1777199836252!5m2!1sen!2sna';
 
   return (
     <div className="w-full bg-[linear-gradient(180deg,#f8fbfd_0%,#ffffff_50%,#eef4f9_100%)]">
@@ -138,7 +135,7 @@ export default function ContactPage() {
             </motion.a>
 
             <motion.a
-              href="https://www.google.com/maps/search/Begonia+Street+Khomasdal+Windhoek"
+              href="https://maps.app.goo.gl/TPchSFyMhzo3oC2o6"
               target="_blank"
               rel="noopener noreferrer"
               variants={itemVariants}
@@ -296,7 +293,7 @@ export default function ContactPage() {
                 </div>
                 <Button asChild>
                   <a
-                    href="https://www.google.com/maps/search/Begonia+Street+Khomasdal+Windhoek"
+                    href="https://maps.app.goo.gl/TPchSFyMhzo3oC2o6"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
