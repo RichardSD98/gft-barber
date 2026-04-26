@@ -173,12 +173,12 @@ function Navbar() {
           setIsMenuOpen(false);
         }}
       >
-        <SheetContent side="right" className="w-full max-w-full px-6 pt-10 md:hidden">
+        <SheetContent side="right" className="flex w-full max-w-full flex-col px-6 pb-8 pt-8 md:hidden">
           <SheetHeader className="px-0 pb-3">
             <SheetTitle className="text-white">Navigation</SheetTitle>
           </SheetHeader>
 
-          <nav id="mobile-menu" className="mt-4 flex flex-col gap-5" aria-label="Mobile">
+          <nav id="mobile-menu" className="mt-4 flex flex-col gap-3" aria-label="Mobile">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
 
@@ -187,7 +187,7 @@ function Navbar() {
                   key={link.href}
                   href={link.href}
                   className={[
-                    'rounded-2xl border px-4 py-4 text-2xl font-semibold transition-colors duration-150',
+                    'rounded-2xl border px-4 py-3 text-lg font-semibold transition-colors duration-150',
                     isActive
                       ? 'border-brand-sky/30 bg-brand-sky/10 text-brand-sky'
                       : 'border-white/10 bg-white/5 text-brand-white hover:text-brand-sky',
@@ -201,28 +201,30 @@ function Navbar() {
             })}
           </nav>
 
-          <div className="mt-8 flex items-center gap-3">
-            {socialLinks.map((social) => {
-              const Icon = social.icon;
+          <div className="mt-auto space-y-4 pt-6">
+            <div className="grid grid-cols-2 gap-3">
+              {socialLinks.map((social) => {
+                const Icon = social.icon;
 
-              return (
-                <a
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-colors duration-150 hover:text-brand-sky"
-                >
-                  <Icon className="h-4 w-4" />
-                  {social.label}
-                </a>
-              );
-            })}
+                return (
+                  <a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-medium text-white transition-colors duration-150 hover:text-brand-sky"
+                  >
+                    <Icon className="h-4 w-4" />
+                    {social.label}
+                  </a>
+                );
+              })}
+            </div>
+
+            <Button asChild size="lg" className="w-full justify-center">
+              <Link href="/booking">Book Now</Link>
+            </Button>
           </div>
-
-          <Button asChild size="lg" className="mt-10 w-full justify-center">
-            <Link href="/booking">Book Now</Link>
-          </Button>
         </SheetContent>
       </Sheet>
     </>
