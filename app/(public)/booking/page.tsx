@@ -300,7 +300,7 @@ function BookingPageContent() {
 
       <section className="w-full px-4 py-12 md:px-8 md:py-16">
         <div className="mx-auto max-w-4xl">
-          <div className="mb-5 grid grid-cols-2 gap-2 md:grid-cols-5 md:gap-3">
+          <div className="mb-5 hidden grid-cols-2 gap-2 md:grid md:grid-cols-5 md:gap-3">
             {bookingSteps.map((label, idx) => {
               const stepNumber = idx + 1;
               const isActive = currentStep === stepNumber;
@@ -465,7 +465,7 @@ function BookingPageContent() {
                     ) : !selectedDate ? (
                       <p className="text-sm text-slate-500">Select a date to see available slots.</p>
                     ) : (
-                      <div className="grid grid-cols-3 gap-2 md:grid-cols-4 md:gap-2.5">
+                      <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-2.5">
                         {timeSlots.map((slot) => (
                           <label
                             key={slot.id}
