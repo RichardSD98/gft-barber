@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* Font Variables */
+:root {
+  --font-jakarta: 'Plus Jakarta Sans', sans-serif;
+  --font-inter: 'Inter', sans-serif;
+}
+
+/* Fluid Typography Scale using clamp() */
+:root {
+  --fs-xs: clamp(0.75rem, 1vw, 0.875rem);
+  --fs-sm: clamp(0.875rem, 1.25vw, 1rem);
+  --fs-base: clamp(1rem, 1.5vw, 1.125rem);
+  --fs-lg: clamp(1.25rem, 2.5vw, 1.875rem);
+  --fs-xl: clamp(1.875rem, 3vw, 2.25rem);
+  --fs-hero: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* CSS Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Base Body Styles */
+body {
+  @apply font-body bg-brand-white text-brand-navy;
+}
+
+/* Container Utility */
+@layer components {
+  .container {
+    max-width: 1200px;
+    @apply mx-auto px-4 md:px-8;
+  }
+
+  /* Fluid Typography Classes */
+  .text-xs {
+    font-size: var(--fs-xs);
+  }
+
+  .text-sm {
+    font-size: var(--fs-sm);
+  }
+
+  .text-base {
+    font-size: var(--fs-base);
+  }
+
+  .text-lg {
+    font-size: var(--fs-lg);
+  }
+
+  .text-xl {
+    font-size: var(--fs-xl);
+  }
+
+  .text-hero {
+    font-size: var(--fs-hero);
+    line-height: 1.2;
+    font-family: var(--font-jakarta);
+    font-weight: 800;
+  }
+
+  /* Heading Styles */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading font-bold text-brand-navy;
+  }
+
+  h1 {
+    @apply text-hero;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+}
